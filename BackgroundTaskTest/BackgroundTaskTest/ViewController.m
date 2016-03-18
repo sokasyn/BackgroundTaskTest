@@ -33,6 +33,7 @@
     NSLog(@"View did appear..");
 }
 
+// 进入后台不代表这个view就disappear了
 - (void)viewDidDisappear:(BOOL)animated{
     NSLog(@"view did disappear");
 }
