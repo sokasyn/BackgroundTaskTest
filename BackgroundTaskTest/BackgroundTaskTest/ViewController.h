@@ -7,9 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DateUtil.h"
 
 @interface ViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UILabel *lblCount;
+
+@property (strong, nonatomic) IBOutlet UILabel *lblCountWhenEnterBackground;
+
+@property (strong, nonatomic) IBOutlet UILabel *lblEnterBackgroundTime;
+
+@property (strong, nonatomic) IBOutlet UILabel *lblEnterForegroundTime;
 
 @end
 

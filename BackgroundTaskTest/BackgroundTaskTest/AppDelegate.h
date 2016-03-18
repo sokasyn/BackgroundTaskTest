@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DateUtil.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
