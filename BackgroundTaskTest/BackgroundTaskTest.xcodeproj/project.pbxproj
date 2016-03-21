@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3857DC6C1C9FD6CA00B97E67 /* ReferenceUrl.md in Sources */ = {isa = PBXBuildFile; fileRef = 3857DC6B1C9FD6CA00B97E67 /* ReferenceUrl.md */; };
+		3857DC701C9FD91E00B97E67 /* TimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3857DC6F1C9FD91E00B97E67 /* TimerManager.m */; };
 		38D62BAB1C9BEBE600C891B0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D62BAA1C9BEBE600C891B0 /* main.m */; };
 		38D62BAE1C9BEBE600C891B0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D62BAD1C9BEBE600C891B0 /* AppDelegate.m */; };
 		38D62BB11C9BEBE600C891B0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D62BB01C9BEBE600C891B0 /* ViewController.m */; };
@@ -18,6 +20,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3857DC6B1C9FD6CA00B97E67 /* ReferenceUrl.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = ReferenceUrl.md; sourceTree = "<group>"; };
+		3857DC6E1C9FD91E00B97E67 /* TimerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerManager.h; sourceTree = "<group>"; };
+		3857DC6F1C9FD91E00B97E67 /* TimerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerManager.m; sourceTree = "<group>"; };
 		38D62BA61C9BEBE600C891B0 /* BackgroundTaskTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BackgroundTaskTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38D62BAA1C9BEBE600C891B0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		38D62BAC1C9BEBE600C891B0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -44,6 +49,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3857DC6D1C9FD8F200B97E67 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3857DC6E1C9FD91E00B97E67 /* TimerManager.h */,
+				3857DC6F1C9FD91E00B97E67 /* TimerManager.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		38D62B9D1C9BEBE600C891B0 = {
 			isa = PBXGroup;
 			children = (
@@ -69,6 +83,7 @@
 				38D62BB01C9BEBE600C891B0 /* ViewController.m */,
 				38D62BC01C9BF7D900C891B0 /* DateUtil.h */,
 				38D62BC11C9BF7D900C891B0 /* DateUtil.m */,
+				3857DC6D1C9FD8F200B97E67 /* Model */,
 				38D62BC31C9C140400C891B0 /* Resource */,
 				38D62BB21C9BEBE600C891B0 /* Main.storyboard */,
 				38D62BB51C9BEBE600C891B0 /* Assets.xcassets */,
@@ -91,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				38D62BC41C9C148700C891B0 /* SystemNotificationList.txt */,
+				3857DC6B1C9FD6CA00B97E67 /* ReferenceUrl.md */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -171,6 +187,8 @@
 				38D62BC21C9BF7D900C891B0 /* DateUtil.m in Sources */,
 				38D62BAE1C9BEBE600C891B0 /* AppDelegate.m in Sources */,
 				38D62BAB1C9BEBE600C891B0 /* main.m in Sources */,
+				3857DC6C1C9FD6CA00B97E67 /* ReferenceUrl.md in Sources */,
+				3857DC701C9FD91E00B97E67 /* TimerManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

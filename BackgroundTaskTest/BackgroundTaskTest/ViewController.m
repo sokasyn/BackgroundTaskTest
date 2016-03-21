@@ -59,6 +59,15 @@
     }
 }
 
+- (BOOL)isMultiaskingSupported{
+    
+    UIDevice *device = [UIDevice currentDevice];
+    if ([device respondsToSelector:@selector(isMultiaskingSupported)]) {
+        return [device isMultitaskingSupported];
+    }
+    return NO;
+}
+
 #pragma mark -Timer测试
 // Timer初始化
 - (void)initTimer{
@@ -134,11 +143,16 @@
 // 开始任务
 - (void)startTask{
     NSLog(@"task start..");
-    // 启用子线程去执行Timer的任务,模拟器可以一直无限时执行后台任务,真机上一旦按下Home键或者进入其他的应用，后台任务立即暂停
+    
+    /* 启用子线程去执行Timer的任务,模拟器可以一直无限时执行后台任务,真机上一旦按下Home键或者进入其他的应用，后台任务立即暂停
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [self startTimer];
-    });
+    });*/
+    
+    // 开始后台任务
+    [self beginBackgroundTask];
 }
+
 // 暂停任务
 - (void)pauseTask{
     [self pauseTimer];
@@ -149,14 +163,26 @@
     [self stopTimer];
 }
 
-// ---------- 测试方式,Timer ----------
+// ---------- iOS 的beginBackgroundTask ----------
+// 默认是有一段后台的时间限制，超过该时间，则自动app线程会被挂起，任务停止
+- (void)beginBackgroundTask{
+    
+    UIApplication *app = [UIApplication sharedApplication];
+    UIBackgroundTaskIdentifier __block backgroundTaskId = [app beginBackgroundTaskWithName:@"timer task" expirationHandler:^{
+        [app endBackgroundTask:backgroundTaskId];
+        backgroundTaskId = UIBackgroundTaskInvalid;
+    }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [self startTimer];
+    });
+}
+
+// ---------- Timer ----------
 // 开始Timer
 - (void)startTimer{
-     NSLog(@"timer start..");
     if (!self.timer) {
         [self initTimer];
     }else{
-        NSLog(@"timer has been exits.");
         if (![self.timer isValid]) {
             NSLog(@"timer is not valid..");
         }
@@ -187,14 +213,20 @@
     self.timer = nil;
 }
 
-// 1.模拟器可以一直无限时执行后台任务,真机上一旦按下Home键或者进入其他的应用，后台任务立即暂停
-// 2.要让app能在后台执行任务,需要做出额外的处理
-//   2-1.
 // 具体的任务
 - (void)settingCount:(NSInteger)count{
+    NSTimeInterval timeRemain = [[UIApplication sharedApplication] backgroundTimeRemaining];
+    NSLog(@"application background time remaining:%.02f senconds",timeRemain);
     dispatch_async(dispatch_get_main_queue(), ^{
         self.lblCount.text = [NSString stringWithFormat:@"%ld",(long)count];
     });
 }
+
+/* 打印结果分析
+ 前台执行的backgroundTimeRemaining是一个很大的常量,可理解为无限时间
+ 后台执行开始:application background time remain:179.83
+ 后台执行停止:application background time remain:4.04
+ 即在测试设备iPhone4,iOS版本7.1上,默认的能向系统申请的后台执行时间是3分钟左右
+ */
 
 @end
