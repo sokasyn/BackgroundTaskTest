@@ -54,6 +54,9 @@
 // 组件初始化
 - (void)initCompenents{
     [self registerNotification];
+    if (![UIDevice currentDevice].multitaskingSupported) {
+        NSLog(@"设备不支持多任务.");
+    }
 }
 
 #pragma mark -Timer测试
@@ -122,30 +125,76 @@
     [self pauseTask];
 }
 
+- (IBAction)btnStopClicked:(id)sender{
+    NSLog(@"stop task");
+    [self stopTask];
+}
+
 #pragma mark -User Actions
-// 开始
+// 开始任务
 - (void)startTask{
     NSLog(@"task start..");
+    // 启用子线程去执行Timer的任务,模拟器可以一直无限时执行后台任务,真机上一旦按下Home键或者进入其他的应用，后台任务立即暂停
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [self startTimer];
+    });
+}
+// 暂停任务
+- (void)pauseTask{
+    [self pauseTimer];
+}
+
+// 停止任务
+- (void)stopTask{
+    [self stopTimer];
+}
+
+// ---------- 测试方式,Timer ----------
+// 开始Timer
+- (void)startTimer{
+     NSLog(@"timer start..");
     if (!self.timer) {
         [self initTimer];
     }else{
         NSLog(@"timer has been exits.");
+        if (![self.timer isValid]) {
+            NSLog(@"timer is not valid..");
+        }
+        [self.timer setFireDate:[NSDate distantPast]];
     }
-    [self.timer fire];
+    // scheduledTimerWithTimeInterval是基于runLoop的,主线程的runLoop默认是开启的,子线程的runloop是关闭的
+    // 所以在采用子线程去执行timer的任务的时候,要把该线程的runloop开起来,否则只执行一次，而不会循环执行.
+    [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+    [[NSRunLoop currentRunLoop] run];
 }
 
-// 暂停
-- (void)pauseTask{
-    NSLog(@"task pause..");
+// 暂停Timer
+- (void)pauseTimer{
+    NSLog(@"timer paused..");
     if (self.timer) {
-        [self.timer invalidate];
-        self.timer = nil;
+        [self.timer setFireDate:[NSDate distantFuture]];
+    }else{
+        NSLog(@"timer is nil.");
     }
 }
 
+// 停止Timer
+- (void)stopTimer{
+    [self pauseTimer];
+    if ([self.timer isValid]) {
+        [self.timer invalidate]; // 自动将Timer从RunLoop移除
+    }
+    self.timer = nil;
+}
+
+// 1.模拟器可以一直无限时执行后台任务,真机上一旦按下Home键或者进入其他的应用，后台任务立即暂停
+// 2.要让app能在后台执行任务,需要做出额外的处理
+//   2-1.
 // 具体的任务
 - (void)settingCount:(NSInteger)count{
-    self.lblCount.text = [NSString stringWithFormat:@"%ld",(long)count];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.lblCount.text = [NSString stringWithFormat:@"%ld",(long)count];
+    });
 }
 
 @end
