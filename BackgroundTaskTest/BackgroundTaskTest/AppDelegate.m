@@ -10,22 +10,34 @@
 
 @interface AppDelegate ()
 
-@property (retain,nonatomic) NSTimer *timer;
+@property (retain, nonatomic) NSTimer *timer;
+@property (assign, nonatomic) UIBackgroundTaskIdentifier bgTask;
+@property (assign, nonatomic) NSInteger count;
 
 @end
 
 @implementation AppDelegate
 
 @synthesize timer = timer_;
+@synthesize bgTask = bgTask_;
+@synthesize count  = count_;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    NSError *categoryErr = nil;
-    NSError *activationErr  = nil;
-    [audioSession setCategory: AVAudioSessionCategoryPlayback error: &categoryErr];
-    [audioSession setActive: YES error: &activationErr];
+    
+    if ([self isMultiaskingSupported]) {
+        NSLog(@"支持后台多任务");
+    }else{
+        NSLog(@"不支持后台多任务");
+    }
     return YES;
+}
+
+// 检测设备的是否支持后台多任务
+- (BOOL)isMultiaskingSupported{
+    UIDevice *device = [UIDevice currentDevice];
+    BOOL supported = [device isMultitaskingSupported];
+    return supported;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -38,11 +50,94 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     NSLog(@"app 进入了后台.");
-    [self configLongtimeBackgroundRunning];
+    /*
+    UIApplication *app = [UIApplication sharedApplication];
+    bgTask_ = [app beginBackgroundTaskWithExpirationHandler:^{
+        NSLog(@"");
+        [app endBackgroundTask:bgTask_];
+        bgTask_ = UIBackgroundTaskInvalid;
+    }];
+    
+    // Start the long-running task and return immediately.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // Do the work associated with the task.
+        NSLog(@"1-------后台运行中...");
+        [self startTimer];
+        [app endBackgroundTask:bgTask_];
+        bgTask_ = UIBackgroundTaskInvalid;
+        NSLog(@"2-------后台运行中...");
+    });*/
+//    [self testWithVoip];
+    [self backgroundHandler];
 }
 
+//  ---------- 音频方式:denied ----------
+- (void)testWithAudioWay{
+    
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    NSError *categoryErr = nil;
+    [audioSession setCategory: AVAudioSessionCategoryPlayback error: &categoryErr];
+    if(categoryErr){
+        NSLog(@"Error setting audio category: %@", [categoryErr localizedDescription]);
+    }
+    
+    NSError *activationErr  = nil;
+    [audioSession setActive:YES error: &activationErr];
+    if (activationErr) {
+        NSLog(@"Error setting audio active: %@", [activationErr localizedDescription]);
+    }
+}
+
+//  ---------- voip方式 ----------
+- (void)testWithVoip{
+    UIApplication *app = [UIApplication sharedApplication];
+    BOOL backgroundAccepted = [app setKeepAliveTimeout:600 handler:^{
+        NSLog(@"setKeepAlive fro background task handler..");
+        [self backgroundHandler];
+    }];
+    
+    if(backgroundAccepted){
+        NSLog(@"backgrounding accepted");
+    }
+    [self backgroundHandler];
+}
+
+- (void)backgroundHandler{
+    NSLog(@"backgrounding handler begin.");
+    UIApplication *app = [UIApplication sharedApplication];
+    self.bgTask = [app beginBackgroundTaskWithExpirationHandler:^{
+        NSLog(@"Background task expired.");
+        [app endBackgroundTask:self.bgTask];
+        self.bgTask = UIBackgroundTaskInvalid;
+    }];
+    NSLog(@"backgroundTaskIdentifier:%d",self.bgTask);
+    // Start the long-running task
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        /*
+        while (1) {
+            if (self.count >= 30) {
+                NSLog(@"counter task finished.");
+                [app endBackgroundTask:bgTask_];
+                bgTask_ = UIBackgroundTaskInvalid;
+                break;
+            }
+            self.count ++;
+            NSLog(@"counter:%d",self.count);
+            [NSThread sleepForTimeInterval:1.0];
+        }*/
+        
+        while (1) {
+            NSLog(@"counter:%ld", (long)self.count++);
+            NSTimeInterval timeRemain = [[UIApplication sharedApplication] backgroundTimeRemaining];
+            NSLog(@"Background time remaining:%.02f senconds",timeRemain);
+            [NSThread sleepForTimeInterval:1.0];
+        }
+    });
+}
+
+
 // --------------------------------------------------------------
-// 可在后台长时间运行任务的配置
+// 可在后台长时间运行任务的配置 denied
 - (void)configLongtimeBackgroundRunning{
     NSLog(@"可长时间后台运行的配置");
     UIApplication *app = [UIApplication sharedApplication];

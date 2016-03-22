@@ -54,18 +54,17 @@
 // 组件初始化
 - (void)initCompenents{
     [self registerNotification];
-    if (![UIDevice currentDevice].multitaskingSupported) {
-        NSLog(@"设备不支持多任务.");
+    if ([UIDevice currentDevice].multitaskingSupported) {
+        NSLog(@"设备支持多任务!");
+    }else{
+        NSLog(@"设备不支持多任务!");
     }
 }
 
 - (BOOL)isMultiaskingSupported{
-    
     UIDevice *device = [UIDevice currentDevice];
-    if ([device respondsToSelector:@selector(isMultiaskingSupported)]) {
-        return [device isMultitaskingSupported];
-    }
-    return NO;
+    BOOL supported = [device isMultitaskingSupported];
+    return supported;
 }
 
 #pragma mark -Timer测试
