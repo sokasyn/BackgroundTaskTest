@@ -16,6 +16,9 @@ Audiosession和VOIP注意事项
 http://www.cocoachina.com/ios/20121212/5313.html
 
 
+#伪后台
+http://www.cnblogs.com/lee0oo0/p/4224247.html
+
 
 9.长时间驻足后台与苹果的审核
 http://www.cocoachina.com/bbs/read.php?tid=246985

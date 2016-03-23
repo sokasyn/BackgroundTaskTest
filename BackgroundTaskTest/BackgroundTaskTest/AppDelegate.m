@@ -68,7 +68,7 @@
         NSLog(@"2-------后台运行中...");
     });*/
 //    [self testWithVoip];
-    [self backgroundHandler];
+//    [self backgroundHandler];
 }
 
 //  ---------- 音频方式:denied ----------
@@ -110,7 +110,7 @@
         [app endBackgroundTask:self.bgTask];
         self.bgTask = UIBackgroundTaskInvalid;
     }];
-    NSLog(@"backgroundTaskIdentifier:%d",self.bgTask);
+    NSLog(@"backgroundTaskIdentifier:%lu",(unsigned long)self.bgTask);
     // Start the long-running task
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         /*

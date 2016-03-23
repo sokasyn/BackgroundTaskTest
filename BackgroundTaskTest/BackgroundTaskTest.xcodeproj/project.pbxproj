@@ -10,6 +10,7 @@
 		3857DC6C1C9FD6CA00B97E67 /* ReferenceUrl.md in Sources */ = {isa = PBXBuildFile; fileRef = 3857DC6B1C9FD6CA00B97E67 /* ReferenceUrl.md */; };
 		3857DC701C9FD91E00B97E67 /* TimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3857DC6F1C9FD91E00B97E67 /* TimerManager.m */; };
 		3857DC721C9FE5A000B97E67 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3857DC711C9FE5A000B97E67 /* AVFoundation.framework */; };
+		3857DC751CA2331C00B97E67 /* AppManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3857DC741CA2331C00B97E67 /* AppManager.m */; };
 		38D62BAB1C9BEBE600C891B0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D62BAA1C9BEBE600C891B0 /* main.m */; };
 		38D62BAE1C9BEBE600C891B0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D62BAD1C9BEBE600C891B0 /* AppDelegate.m */; };
 		38D62BB11C9BEBE600C891B0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D62BB01C9BEBE600C891B0 /* ViewController.m */; };
@@ -25,6 +26,8 @@
 		3857DC6E1C9FD91E00B97E67 /* TimerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerManager.h; sourceTree = "<group>"; };
 		3857DC6F1C9FD91E00B97E67 /* TimerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerManager.m; sourceTree = "<group>"; };
 		3857DC711C9FE5A000B97E67 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		3857DC731CA2331C00B97E67 /* AppManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppManager.h; sourceTree = "<group>"; };
+		3857DC741CA2331C00B97E67 /* AppManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppManager.m; sourceTree = "<group>"; };
 		38D62BA61C9BEBE600C891B0 /* BackgroundTaskTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BackgroundTaskTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38D62BAA1C9BEBE600C891B0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		38D62BAC1C9BEBE600C891B0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -57,6 +60,8 @@
 			children = (
 				3857DC6E1C9FD91E00B97E67 /* TimerManager.h */,
 				3857DC6F1C9FD91E00B97E67 /* TimerManager.m */,
+				3857DC731CA2331C00B97E67 /* AppManager.h */,
+				3857DC741CA2331C00B97E67 /* AppManager.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -192,6 +197,7 @@
 				38D62BAE1C9BEBE600C891B0 /* AppDelegate.m in Sources */,
 				38D62BAB1C9BEBE600C891B0 /* main.m in Sources */,
 				3857DC6C1C9FD6CA00B97E67 /* ReferenceUrl.md in Sources */,
+				3857DC751CA2331C00B97E67 /* AppManager.m in Sources */,
 				3857DC701C9FD91E00B97E67 /* TimerManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DateUtil.h"
+#import "AppManager.h"
 
 @interface ViewController : UIViewController
 
