@@ -11,6 +11,7 @@
 		3857DC701C9FD91E00B97E67 /* TimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3857DC6F1C9FD91E00B97E67 /* TimerManager.m */; };
 		3857DC721C9FE5A000B97E67 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3857DC711C9FE5A000B97E67 /* AVFoundation.framework */; };
 		3857DC751CA2331C00B97E67 /* AppManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3857DC741CA2331C00B97E67 /* AppManager.m */; };
+		38AE30281CA38DFB001E9442 /* Crystals.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 38AE30271CA38DFB001E9442 /* Crystals.mp3 */; };
 		38D62BAB1C9BEBE600C891B0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D62BAA1C9BEBE600C891B0 /* main.m */; };
 		38D62BAE1C9BEBE600C891B0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D62BAD1C9BEBE600C891B0 /* AppDelegate.m */; };
 		38D62BB11C9BEBE600C891B0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D62BB01C9BEBE600C891B0 /* ViewController.m */; };
@@ -28,6 +29,7 @@
 		3857DC711C9FE5A000B97E67 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		3857DC731CA2331C00B97E67 /* AppManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppManager.h; sourceTree = "<group>"; };
 		3857DC741CA2331C00B97E67 /* AppManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppManager.m; sourceTree = "<group>"; };
+		38AE30271CA38DFB001E9442 /* Crystals.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Crystals.mp3; sourceTree = "<group>"; };
 		38D62BA61C9BEBE600C891B0 /* BackgroundTaskTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BackgroundTaskTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38D62BAA1C9BEBE600C891B0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		38D62BAC1C9BEBE600C891B0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -64,6 +66,14 @@
 				3857DC741CA2331C00B97E67 /* AppManager.m */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		38AE30241CA38DA7001E9442 /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				38AE30271CA38DFB001E9442 /* Crystals.mp3 */,
+			);
+			path = Music;
 			sourceTree = "<group>";
 		};
 		38D62B9D1C9BEBE600C891B0 = {
@@ -114,6 +124,7 @@
 		38D62BC31C9C140400C891B0 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				38AE30241CA38DA7001E9442 /* Music */,
 				38D62BC41C9C148700C891B0 /* SystemNotificationList.txt */,
 				3857DC6B1C9FD6CA00B97E67 /* ReferenceUrl.md */,
 			);
@@ -181,6 +192,7 @@
 				38D62BC51C9C148700C891B0 /* SystemNotificationList.txt in Resources */,
 				38D62BB91C9BEBE600C891B0 /* LaunchScreen.storyboard in Resources */,
 				38D62BB61C9BEBE600C891B0 /* Assets.xcassets in Resources */,
+				38AE30281CA38DFB001E9442 /* Crystals.mp3 in Resources */,
 				38D62BB41C9BEBE600C891B0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

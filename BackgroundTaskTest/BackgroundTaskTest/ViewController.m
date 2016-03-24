@@ -21,6 +21,9 @@
 @property (assign, nonatomic) NSInteger countPerGroup;
 @property (assign,nonatomic,getter=isStop) BOOL stop;
 
+
+@property (strong, nonatomic) AVAudioPlayer *audioPlayer;
+
 @end
 
 @implementation ViewController
@@ -34,8 +37,9 @@
 @synthesize writtenCount = writtenCount;
 @synthesize group = group_;
 @synthesize countPerGroup = countPerGroup_;
-
 @synthesize stop = stop_;
+
+@synthesize audioPlayer = audioPlayer_;
 
 #define kFileName @"test.txt"
 #define kCountPerGroup  30
@@ -61,8 +65,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark -inits
-// 数据初始化
+#pragma mark - inits
+#pragma mark -数据初始化
 - (void)initData{
     self.timerCount = 1;
     self.countWhenEnterBackground = 1;
@@ -74,7 +78,7 @@
 //    self.lblCount.text = [NSString stringWithFormat:@"%ld",(long)self.count];
 }
 
-// 组件初始化
+#pragma mark -组件初始化
 - (void)initCompenents{
     [self registerNotification];
     if ([UIDevice currentDevice].multitaskingSupported) {
@@ -90,8 +94,7 @@
     return supported;
 }
 
-#pragma mark -Timer测试
-// Timer初始化
+#pragma mark -Timer初始化
 - (void)initTimer{
     NSTimeInterval timeInterval = 1.0f;
     self.timer = [NSTimer scheduledTimerWithTimeInterval:timeInterval
@@ -100,14 +103,13 @@
                                                  repeats:YES];
 }
 
-// timer循环事件处理
 - (void)handleTimer:(id)sender{
     NSLog(@"handleTimer...%ld",(long)self.timerCount);
     self.timerCount ++;
     [self settingCount:self.timerCount];
 }
 
-#pragma mark -进入前后台的系统通知处理
+#pragma mark -Notification处理
 // 监听app进入后台和回到前台的系统通知
 - (void)registerNotification{
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -150,7 +152,7 @@
     self.lblEnterForegroundTime.textColor = [UIColor blueColor];
 }
 
-#pragma mark -IBActions
+#pragma mark - IBActions
 -(IBAction)btnStartClicked:(id)sender{
     [self startTask];
 }
@@ -163,7 +165,6 @@
     [self stopTask];
 }
 
-#pragma mark -User Actions
 // 开始任务
 - (void)startTask{
     NSLog(@"task start..");
@@ -178,50 +179,41 @@
 //    [self beginBackgroundTaskTimer];
     
     // 开始后台任务,写文件
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-//        [self saveInformationToFile];
-//    });
-    [self beginBackgroundTaskWritingFile];
+//    [self beginBackgroundTaskWritingFile];
+    
+    // 播放音频文件
+    [self playAudioFile];
 }
 
 // 暂停任务
 - (void)pauseTask{
     self.stop = YES;
     [self pauseTimer];
+    [self.audioPlayer pause];
+    NSLog(@"audio duration:%f",[self.audioPlayer duration]);
 }
 
 // 停止任务
 - (void)stopTask{
     self.stop = YES;
     [self stopTimer];
+    [self.audioPlayer stop];
 }
 
 // ---------- iOS 的beginBackgroundTask ----------
+#pragma mark - Timer处理
+#pragma mark -后台启动Timer任务
 // 默认是有一段后台的时间限制，超过该时间，则自动app线程会被挂起，任务停止,并执行expirationHandler清场
 - (void)beginBackgroundTaskTimer{
     UIApplication *app = [UIApplication sharedApplication];
-    self.bgTaskTimer = [app beginBackgroundTaskWithName:@"timer bg task" expirationHandler:^{
-        NSLog(@"timer bg task expirated..");
+    self.bgTaskTimer = [app beginBackgroundTaskWithName:@"TimerCountingTask" expirationHandler:^{
+        NSLog(@"[后台Timer任务]已经终结!");
+        // 经过真机调试发现,如果不调用endBackgroundTask，该后台任务会一直执行！哪怕超过系统给与的上限,
         [app endBackgroundTask:self.bgTaskTimer];
         self.bgTaskTimer = UIBackgroundTaskInvalid;
     }];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [self startTimer];
-    });
-}
-
-- (void)beginBackgroundTaskWritingFile{
-    NSLog(@"后台写文件任务启动");
-    UIApplication *app = [UIApplication sharedApplication];
-    self.bgTaskFile = [app beginBackgroundTaskWithName:@"FileWritingTask" expirationHandler:^{
-        NSLog(@"[后台写文件任务]已经终结!");
-        [self printBackgroundTimeRemaining];
-        [app endBackgroundTask:self.bgTaskFile];
-        self.bgTaskFile = UIBackgroundTaskInvalid;
-    }];
-    // 多线程执行后台任务
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        [self saveInformationToFile];
     });
 }
 
@@ -231,8 +223,6 @@
     taskIdentifier = UIBackgroundTaskInvalid;
 }
 
-
-// ---------- Timer ----------
 // 开始Timer
 - (void)startTimer{
     if (!self.timer) {
@@ -268,7 +258,7 @@
     self.timer = nil;
 }
 
-// 具体的任务
+// 设置count值，并显示在界面上
 - (void)settingCount:(NSInteger)count{
     [self printBackgroundTimeRemaining];
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -276,6 +266,7 @@
     });
 }
 
+#pragma mark -获取iOS规定的后台剩余时间
 // 打印系统的给app后台的剩余时间,疑惑:本测试,后台的最长时间为180秒左右,怎么都说是10分钟，跟设备和iOS系统有关系吗？
 - (void)printBackgroundTimeRemaining{
     NSTimeInterval backgroundTimeRemain = [[UIApplication sharedApplication] backgroundTimeRemaining];
@@ -293,6 +284,23 @@
  即在测试设备iPhone4,iOS版本7.1上,默认的能向系统申请的后台执行时间是3分钟左右
  */
 
+#pragma mark - 写文件处理
+// ---------- Writing File ----------
+#pragma mark -后台启动写文件任务
+- (void)beginBackgroundTaskWritingFile{
+    NSLog(@"后台写文件任务启动");
+    UIApplication *app = [UIApplication sharedApplication];
+    self.bgTaskFile = [app beginBackgroundTaskWithName:@"FileWritingTask" expirationHandler:^{
+        NSLog(@"[后台写文件任务]已经终结!");
+        [self printBackgroundTimeRemaining];
+        [app endBackgroundTask:self.bgTaskFile];
+        self.bgTaskFile = UIBackgroundTaskInvalid;
+    }];
+    // 多线程执行后台任务
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [self saveInformationToFile];
+    });
+}
 
 - (void)saveInformationToFile{
     NSString *tmpPath = [[AppManager defaultManager] getAppTempDirectoryPath];
@@ -341,13 +349,83 @@
     }
     [self outputStream:fileOutputStream write:@"\n"];
     [fileOutputStream close];
-//    [self endBackgroundTaskWithTaskIdentifer:self.bgTaskFile];
+    NSLog(@"Writing is stoped..");
+    [self endBackgroundTaskWithTaskIdentifer:self.bgTaskFile];
 }
 
 - (void)outputStream:(NSOutputStream *)outputStream write:(NSString *)content{
     [outputStream write:(const uint8_t *)[content cStringUsingEncoding:NSUTF8StringEncoding]
               maxLength:[content lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
 }
+
+#pragma mark - 音频处理
+// ---------- Audio ----------
+#pragma mark -后台启动播放音频文件任务
+- (void)beginBackgroundTaskPlayingAudioFile{
+    NSLog(@"后台播放音频文件启动");
+    
+}
+
+- (void)initPlayer{
+    
+}
+
+- (void)playAudioFile{
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    NSError *categoryErr = nil;
+    [audioSession setCategory: AVAudioSessionCategoryPlayback error: &categoryErr];
+    if(categoryErr){
+        NSLog(@"Error setting audio category: %@", [categoryErr localizedDescription]);
+    }
+    
+    NSError *activationErr  = nil;
+    [audioSession setActive:YES error: &activationErr];
+    if (activationErr) {
+        NSLog(@"Error setting audio active: %@", [activationErr localizedDescription]);
+    }
+    
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSString *filePath = [mainBundle pathForResource:@"Crystals" ofType:@"mp3"];
+    NSData *fileData = [NSData dataWithContentsOfFile:filePath];
+    NSError *error = nil;
+    self.audioPlayer = [[AVAudioPlayer alloc] initWithData:fileData error:&error];
+    self.audioPlayer.delegate = self;
+    // 设置无线循环播放
+    [self.audioPlayer setNumberOfLoops:-1];
+    if ([self.audioPlayer prepareToPlay] && [self.audioPlayer play]){
+        NSLog(@"音频文件开始循环播放!");
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            // 音频无线成功循环播放后,启用子线程启动Timer任务,从打印的后台剩余时间可见,是无限的！
+            [self startTimer];
+        });
+    } else {
+        NSLog(@"Failed to play.");
+    }
+}
+
+/* something has caused your audio session to be interrupted */
+- (void)beginInterruption{
+    NSLog(@"method called:%@",NSStringFromSelector(_cmd));
+    
+}
+/* the interruption is over */
+- (void)endInterruptionWithFlags:(NSUInteger)flags{
+    // Currently the only flag is AVAudioSessionInterruptionFlags_ShouldResume.
+    NSLog(@"method called:%@",NSStringFromSelector(_cmd));
+    
+}
+
+- (void)endInterruption{
+    // endInterruptionWithFlags: will be called instead if implemented.
+    NSLog(@"method called:%@",NSStringFromSelector(_cmd));
+    
+}
+
+/* notification for input become available or unavailable */
+- (void)inputIsAvailableChanged:(BOOL)isInputAvailable{
+    
+}
+
 
 
 @end
