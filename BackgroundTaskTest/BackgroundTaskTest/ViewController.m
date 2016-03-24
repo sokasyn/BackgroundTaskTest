@@ -190,7 +190,6 @@
     self.stop = YES;
     [self pauseTimer];
     [self.audioPlayer pause];
-    NSLog(@"audio duration:%f",[self.audioPlayer duration]);
 }
 
 // 停止任务
