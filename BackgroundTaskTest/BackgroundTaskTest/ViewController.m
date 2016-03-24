@@ -395,7 +395,7 @@
     if ([self.audioPlayer prepareToPlay] && [self.audioPlayer play]){
         NSLog(@"音频文件开始循环播放!");
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-            // 音频无线成功循环播放后,启用子线程启动Timer任务,从打印的后台剩余时间可见,是无限的！
+            // 音频无线成功循环播放后,启用子线程启动Timer任务,从打印的后台剩余时间可见,是无限的.
             [self startTimer];
         });
     } else {
